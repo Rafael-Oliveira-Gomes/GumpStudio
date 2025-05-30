@@ -1,0 +1,36 @@
+<nav class="barra-navegacao">
+  <div class="container-navegacao">
+    <!-- Logo/Título do estúdio -->
+    <div class="logo-estudio">
+      <mat-icon class="icone-logo">insights</mat-icon>
+      <span class="nome-estudio">GUMP Studio</span>
+    </div>
+
+    <!-- Menu de navegação -->
+    <div class="menu-navegacao">
+      <div 
+        *ngFor="let item of itensNavegacao" 
+        [class]="obterClasseItem(item.rota)"
+        (click)="navegar(item.rota)"
+        matRipple
+        [matRippleColor]="'rgba(255, 255, 255, 0.1)'"
+        [attr.aria-label]="item.descricao"
+        [title]="item.descricao">
+        
+        <mat-icon class="icone-item">{{ item.icone }}</mat-icon>
+        <span class="titulo-item">{{ item.titulo }}</span>
+        
+        <!-- Indicador de item ativo -->
+        <div class="indicador-ativo" *ngIf="estaAtiva(item.rota)"></div>
+      </div>
+    </div>
+
+    <!-- Informações adicionais -->
+    <div class="info-navegacao">
+      <div class="status-sistema">
+        <mat-icon class="icone-status online">fiber_manual_record</mat-icon>
+        <span class="texto-status">Sistema Online</span>
+      </div>
+    </div>
+  </div>
+</nav>

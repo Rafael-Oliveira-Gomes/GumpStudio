@@ -1,0 +1,59 @@
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--cor-fundo-principal);
+  color: var(--cor-texto-principal);
+}
+
+.cabecalho-principal {
+  background: linear-gradient(135deg, var(--cor-preta) 0%, var(--cor-cinza-escuro) 100%);
+  padding: 2rem 0;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+
+  .titulo-studio {
+    font-size: 3rem;
+    font-weight: bold;
+    color: var(--cor-branca);
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    letter-spacing: 0.1em;
+  }
+}
+
+.conteudo-principal {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.rodape {
+  background-color: var(--cor-preta);
+  color: var(--cor-cinza-claro);
+  text-align: center;
+  padding: 1rem;
+  margin-top: auto;
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}
+
+// Responsividade
+@media (max-width: 768px) {
+  .cabecalho-principal {
+    padding: 1rem 0;
+
+    .titulo-studio {
+      font-size: 2rem;
+    }
+  }
+
+  .conteudo-principal {
+    padding: 1rem;
+  }
+}

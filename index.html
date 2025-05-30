@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GUMP - Estúdio de Tatuagem</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            color: #f9fafb;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #d1d5db;
+            font-size: 1.2rem;
+        }
+
+        .navigation {
+            background: #262626;
+            padding: 1rem 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            padding: 0 2rem;
+        }
+
+        .nav-button {
+            background: #374151;
+            color: #d1d5db;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-button:hover {
+            background: #dc2626;
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-button.active {
+            background: #dc2626;
+            color: #ffffff;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            display: none;
+            background: #262626;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section h2 {
+            color: #f9fafb;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            color: #d1d5db;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background: #374151;
+            border: 1px solid #4b5563;
+            border-radius: 6px;
+            color: #f9fafb;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #dc2626;
+            box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #374151;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #dc2626;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: #b91c1c;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: #d1d5db;
+            border: 1px solid #374151;
+        }
+
+        .btn-secondary:hover {
+            background: #374151;
+            color: #f9fafb;
+        }
+
+        .required {
+            color: #dc2626;
+        }
+
+        .info-box {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1.5rem;
+        }
+
+        .info-box p {
+            color: #d1d5db;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>GUMP</h1>
+        <p>Estúdio de Tatuagem - Sistema de Gerenciamento</p>
+    </header>
+
+    <nav class="navigation">
+        <div class="nav-container">
+            <button class="nav-button active" onclick="showSection('clientes')">👤 Clientes</button>
+            <button class="nav-button" onclick="showSection('tatuadores')">🎨 Tatuadores</button>
+            <button class="nav-button" onclick="showSection('sessoes')">📅 Sessões</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Seção Clientes -->
+        <section id="clientes" class="section active">
+            <h2>👤 Cadastro de Cliente</h2>
+            <form id="clienteForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nomeCliente">Nome Completo <span class="required">*</span></label>
+                        <input type="text" id="nomeCliente" name="nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nomeSocialCliente">Nome Social</label>
+                        <input type="text" id="nomeSocialCliente" name="nomeSocial">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="emailCliente">Email <span class="required">*</span></label>
+                        <input type="email" id="emailCliente" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefoneCliente">Telefone <span class="required">*</span></label>
+                        <input type="tel" id="telefoneCliente" name="telefone" placeholder="(11) 99999-9999" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dataNascCliente">Data de Nascimento <span class="required">*</span></label>
+                        <input type="date" id="dataNascCliente" name="dataNascimento" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="sexoCliente">Sexo <span class="required">*</span></label>
+                        <select id="sexoCliente" name="sexo" required>
+                            <option value="">Selecione...</option>
+                            <option value="M">Masculino</option>
+                            <option value="F">Feminino</option>
+                            <option value="O">Outro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="alergiaCliente" name="alergia">
+                        <label for="alergiaCliente">Possui alguma alergia</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="observacaoCliente">Observações</label>
+                    <textarea id="observacaoCliente" name="observacao" placeholder="Observações adicionais, alergias específicas, cuidados especiais..."></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="resetForm('clienteForm')">Limpar</button>
+                    <button type="submit" class="btn btn-primary">Cadastrar Cliente</button>
+                </div>
+            </form>
+
+            <div class="info-box">
+                <p>ℹ️ Todos os campos marcados com * são obrigatórios. As informações serão utilizadas para agendamento de sessões e contato.</p>
+            </div>
+        </section>
+
+        <!-- Seção Tatuadores -->
+        <section id="tatuadores" class="section">
+            <h2>🎨 Cadastro de Tatuador</h2>
+            <form id="tatuadorForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nomeTatuador">Nome Completo <span class="required">*</span></label>
+                        <input type="text" id="nomeTatuador" name="nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nomeSocialTatuador">Nome Artístico</label>
+                        <input type="text" id="nomeSocialTatuador" name="nomeSocial">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="emailTatuador">Email <span class="required">*</span></label>
+                        <input type="email" id="emailTatuador" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefoneTatuador">Telefone <span class="required">*</span></label>
+                        <input type="tel" id="telefoneTatuador" name="telefone" placeholder="(11) 99999-9999" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dataNascTatuador">Data de Nascimento <span class="required">*</span></label>
+                        <input type="date" id="dataNascTatuador" name="dataNascimento" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="experienciaTatuador">Anos de Experiência <span class="required">*</span></label>
+                        <input type="number" id="experienciaTatuador" name="experiencia" min="0" max="50" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="especialidadeTatuador">Especialidade <span class="required">*</span></label>
+                    <select id="especialidadeTatuador" name="especialidade" required>
+                        <option value="">Selecione...</option>
+                        <option value="Realismo">Realismo</option>
+                        <option value="Old School">Old School</option>
+                        <option value="Tribal">Tribal</option>
+                        <option value="Japonesa">Japonesa</option>
+                        <option value="Geométrica">Geométrica</option>
+                        <option value="Aquarela">Aquarela</option>
+                        <option value="Minimalista">Minimalista</option>
+                        <option value="Blackwork">Blackwork</option>
+                        <option value="Dotwork">Dotwork</option>
+                        <option value="Neo Tradicional">Neo Tradicional</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="portfolioTatuador">Portfólio / Links</label>
+                    <textarea id="portfolioTatuador" name="portfolio" placeholder="Links para Instagram, site, ou descrição do portfólio..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="ativoTatuador" name="ativo" checked>
+                        <label for="ativoTatuador">Tatuador ativo para agendamentos</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="observacaoTatuador">Observações</label>
+                    <textarea id="observacaoTatuador" name="observacao" placeholder="Observações sobre horários, preferências, cuidados especiais..."></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="resetForm('tatuadorForm')">Limpar</button>
+                    <button type="submit" class="btn btn-primary">Cadastrar Tatuador</button>
+                </div>
+            </form>
+
+            <div class="info-box">
+                <p>ℹ️ Todos os campos marcados com * são obrigatórios. O tatuador poderá ser vinculado a sessões após o cadastro.</p>
+            </div>
+        </section>
+
+        <!-- Seção Sessões -->
+        <section id="sessoes" class="section">
+            <h2>📅 Agendamento de Sessão</h2>
+            <form id="sessaoForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="clienteSessao">Cliente <span class="required">*</span></label>
+                        <select id="clienteSessao" name="clienteId" required>
+                            <option value="">Selecione um cliente...</option>
+                            <option value="1">Rafael Gomes (Rafa)</option>
+                            <option value="2">Maria Silva</option>
+                            <option value="3">João Santos</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tatuadorSessao">Tatuador <span class="required">*</span></label>
+                        <select id="tatuadorSessao" name="tatuadorId" required>
+                            <option value="">Selecione um tatuador...</option>
+                            <option value="1">Ana Costa (Ana Ink) - Realismo</option>
+                            <option value="2">Carlos Oliveira (Charlie) - Old School</option>
+                            <option value="3">Fernanda Lima (Fê Tattoo) - Aquarela</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="dataAgendamento">Data e Hora <span class="required">*</span></label>
+                        <input type="datetime-local" id="dataAgendamento" name="dataAgendamento" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="duracaoSessao">Duração (horas) <span class="required">*</span></label>
+                        <input type="number" id="duracaoSessao" name="duracao" step="0.5" min="0.5" max="12" value="2" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="precoSessao">Preço (R$) <span class="required">*</span></label>
+                        <input type="number" id="precoSessao" name="preco" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="statusSessao">Status <span class="required">*</span></label>
+                        <select id="statusSessao" name="status" required>
+                            <option value="Agendada" selected>Agendada</option>
+                            <option value="Em Andamento">Em Andamento</option>
+                            <option value="Concluída">Concluída</option>
+                            <option value="Cancelada">Cancelada</option>
+                            <option value="Reagendada">Reagendada</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="localizacaoCorpo">Localização no Corpo <span class="required">*</span></label>
+                    <select id="localizacaoCorpo" name="localizacaoCorpo" required>
+                        <option value="">Selecione...</option>
+                        <option value="Braço Direito">Braço Direito</option>
+                        <option value="Braço Esquerdo">Braço Esquerdo</option>
+                        <option value="Antebraço Direito">Antebraço Direito</option>
+                        <option value="Antebraço Esquerdo">Antebraço Esquerdo</option>
+                        <option value="Perna Direita">Perna Direita</option>
+                        <option value="Perna Esquerda">Perna Esquerda</option>
+                        <option value="Costas">Costas</option>
+                        <option value="Peito">Peito</option>
+                        <option value="Abdômen">Abdômen</option>
+                        <option value="Pescoço">Pescoço</option>
+                        <option value="Mão Direita">Mão Direita</option>
+                        <option value="Mão Esquerda">Mão Esquerda</option>
+                        <option value="Pé Direito">Pé Direito</option>
+                        <option value="Pé Esquerdo">Pé Esquerdo</option>
+                        <option value="Outro">Outro</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="descricaoTatuagem">Descrição da Tatuagem <span class="required">*</span></label>
+                    <textarea id="descricaoTatuagem" name="descricaoTatuagem" placeholder="Descreva detalhadamente a tatuagem a ser feita..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="observacoesSessao">Observações Gerais</label>
+                    <textarea id="observacoesSessao" name="observacoes" placeholder="Observações sobre a sessão, preparação, etc..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="cuidadosPos">Cuidados Pós-Tatuagem</label>
+                    <textarea id="cuidadosPos" name="cuidadosPos" placeholder="Instruções específicas de cuidados pós-tatuagem..."></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-secondary" onclick="resetForm('sessaoForm')">Limpar</button>
+                    <button type="submit" class="btn btn-primary">Agendar Sessão</button>
+                </div>
+            </form>
+
+            <div class="info-box">
+                <p>ℹ️ Certifique-se de que o horário escolhido está disponível para o tatuador selecionado. Os cuidados pós-tatuagem serão enviados por email para o cliente.</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        function showSection(sectionName) {
+            // Remove active class from all sections and buttons
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Add active class to selected section and button
+            document.getElementById(sectionName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function resetForm(formId) {
+            document.getElementById(formId).reset();
+            // Reset specific defaults
+            if (formId === 'tatuadorForm') {
+                document.getElementById('ativoTatuador').checked = true;
+            }
+            if (formId === 'sessaoForm') {
+                document.getElementById('duracaoSessao').value = '2';
+                document.getElementById('statusSessao').value = 'Agendada';
+            }
+        }
+
+        // Form submission handlers
+        document.getElementById('clienteForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const clienteData = Object.fromEntries(formData);
+            
+            // Simular envio para API
+            console.log('Dados do Cliente:', clienteData);
+            alert('Cliente cadastrado com sucesso! (Demo)');
+            resetForm('clienteForm');
+        });
+
+        document.getElementById('tatuadorForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const tatuadorData = Object.fromEntries(formData);
+            
+            // Simular envio para API
+            console.log('Dados do Tatuador:', tatuadorData);
+            alert('Tatuador cadastrado com sucesso! (Demo)');
+            resetForm('tatuadorForm');
+        });
+
+        document.getElementById('sessaoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const sessaoData = Object.fromEntries(formData);
+            
+            // Simular envio para API
+            console.log('Dados da Sessão:', sessaoData);
+            alert('Sessão agendada com sucesso! (Demo)');
+            resetForm('sessaoForm');
+        });
+
+        // Set minimum date to today
+        const today = new Date().toISOString().slice(0, 16);
+        document.getElementById('dataAgendamento').min = today;
+    </script>
+</body>
+</html>

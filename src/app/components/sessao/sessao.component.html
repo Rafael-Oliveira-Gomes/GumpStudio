@@ -1,0 +1,237 @@
+<div class="container-sessao">
+  <!-- Cabeçalho da página -->
+  <div class="cabecalho-pagina">
+    <h2 class="titulo-pagina">
+      <mat-icon>event</mat-icon>
+      Agendamento de Sessão
+    </h2>
+    <p class="descricao-pagina">Agende uma nova sessão de tatuagem</p>
+  </div>
+
+  <!-- Loading inicial -->
+  <div *ngIf="carregandoDados" class="loading-container">
+    <mat-icon class="icone-loading">hourglass_empty</mat-icon>
+    <p>Carregando dados...</p>
+  </div>
+
+  <!-- Formulário de cadastro -->
+  <mat-card *ngIf="!carregandoDados" class="card-formulario">
+    <mat-card-content>
+      <form [formGroup]="formularioSessao" (ngSubmit)="onSubmit()" class="formulario">
+        
+        <!-- Seção: Informações Básicas -->
+        <div class="secao-formulario">
+          <h3 class="titulo-secao">Informações da Sessão</h3>
+          
+          <div class="linha-formulario">
+            <!-- Cliente -->
+            <mat-form-field class="campo-meio">
+              <mat-label>Cliente *</mat-label>
+              <mat-select formControlName="clienteId">
+                <mat-option *ngFor="let cliente of clientes" [value]="cliente.id">
+                  {{ cliente.nome }}
+                  <span *ngIf="cliente.nomeSocial"> ({{ cliente.nomeSocial }})</span>
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="temErro('clienteId')">
+                {{ obterMensagemErro('clienteId') }}
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Tatuador -->
+            <mat-form-field class="campo-meio">
+              <mat-label>Tatuador *</mat-label>
+              <mat-select formControlName="tatuadorId">
+                <mat-option *ngFor="let tatuador of tatuadores" [value]="tatuador.id">
+                  {{ tatuador.nome }}
+                  <span *ngIf="tatuador.nomeSocial"> ({{ tatuador.nomeSocial }})</span>
+                  <small> - {{ tatuador.especialidade }}</small>
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="temErro('tatuadorId')">
+                {{ obterMensagemErro('tatuadorId') }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="linha-formulario">
+            <!-- Data e hora -->
+            <mat-form-field class="campo-meio">
+              <mat-label>Data e Hora *</mat-label>
+              <input matInput 
+                     type="datetime-local"
+                     formControlName="dataAgendamento">
+              <mat-error *ngIf="temErro('dataAgendamento')">
+                {{ obterMensagemErro('dataAgendamento') }}
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Duração -->
+            <mat-form-field class="campo-meio">
+              <mat-label>Duração (horas) *</mat-label>
+              <input matInput 
+                     type="number"
+                     formControlName="duracao" 
+                     step="0.5"
+                     min="0.5"
+                     max="12">
+              <mat-error *ngIf="temErro('duracao')">
+                {{ obterMensagemErro('duracao') }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="linha-formulario">
+            <!-- Status -->
+            <mat-form-field class="campo-meio">
+              <mat-label>Status *</mat-label>
+              <mat-select formControlName="status">
+                <mat-option *ngFor="let status of statusSessao" [value]="status">
+                  {{ status }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="temErro('status')">
+                {{ obterMensagemErro('status') }}
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Preço -->
+            <mat-form-field class="campo-meio">
+              <mat-label>Preço (R$) *</mat-label>
+              <input matInput 
+                     type="number"
+                     formControlName="preco" 
+                     step="0.01"
+                     min="0">
+              <mat-error *ngIf="temErro('preco')">
+                {{ obterMensagemErro('preco') }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Seção: Detalhes da Tatuagem -->
+        <div class="secao-formulario">
+          <h3 class="titulo-secao">Detalhes da Tatuagem</h3>
+          
+          <div class="linha-formulario">
+            <!-- Localização no corpo -->
+            <mat-form-field class="campo-completo">
+              <mat-label>Localização no Corpo *</mat-label>
+              <mat-select formControlName="localizacaoCorpo">
+                <mat-option *ngFor="let localizacao of localizacoesCorpo" [value]="localizacao">
+                  {{ localizacao }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="temErro('localizacaoCorpo')">
+                {{ obterMensagemErro('localizacaoCorpo') }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="linha-formulario">
+            <!-- Descrição da tatuagem -->
+            <mat-form-field class="campo-completo">
+              <mat-label>Descrição da Tatuagem *</mat-label>
+              <textarea matInput 
+                        formControlName="descricaoTatuagem" 
+                        rows="4" 
+                        placeholder="Descreva detalhadamente a tatuagem a ser feita..."></textarea>
+              <mat-error *ngIf="temErro('descricaoTatuagem')">
+                {{ obterMensagemErro('descricaoTatuagem') }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Seção: Observações -->
+        <div class="secao-formulario">
+          <h3 class="titulo-secao">Observações e Cuidados</h3>
+          
+          <div class="linha-formulario">
+            <!-- Observações gerais -->
+            <mat-form-field class="campo-completo">
+              <mat-label>Observações Gerais</mat-label>
+              <textarea matInput 
+                        formControlName="observacoes" 
+                        rows="3" 
+                        placeholder="Observações sobre a sessão, preparação, etc..."></textarea>
+              <mat-error *ngIf="temErro('observacoes')">
+                {{ obterMensagemErro('observacoes') }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+
+          <div class="linha-formulario">
+            <!-- Cuidados pós-tatuagem -->
+            <mat-form-field class="campo-completo">
+              <mat-label>Cuidados Pós-Tatuagem</mat-label>
+              <textarea matInput 
+                        formControlName="cuidadosPos" 
+                        rows="3" 
+                        placeholder="Instruções específicas de cuidados pós-tatuagem..."></textarea>
+              <mat-error *ngIf="temErro('cuidadosPos')">
+                {{ obterMensagemErro('cuidadosPos') }}
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Botões de ação -->
+        <div class="acoes-formulario">
+          <button mat-button 
+                  type="button" 
+                  class="botao-secundario"
+                  (click)="resetarFormulario()">
+            <mat-icon>clear</mat-icon>
+            Limpar
+          </button>
+          
+          <button mat-raised-button 
+                  type="submit" 
+                  class="botao-primario"
+                  [disabled]="formularioSessao.invalid || carregando || clientes.length === 0 || tatuadores.length === 0">
+            <mat-icon *ngIf="!carregando">save</mat-icon>
+            <mat-icon *ngIf="carregando" class="icone-girando">hourglass_empty</mat-icon>
+            {{ carregando ? 'Agendando...' : 'Agendar Sessão' }}
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Aviso quando não há dados -->
+  <mat-card *ngIf="!carregandoDados && (clientes.length === 0 || tatuadores.length === 0)" class="card-aviso">
+    <mat-card-content>
+      <div class="aviso-sem-dados">
+        <mat-icon>warning</mat-icon>
+        <h3>Dados Necessários</h3>
+        <p *ngIf="clientes.length === 0 && tatuadores.length === 0">
+          É necessário cadastrar pelo menos um cliente e um tatuador antes de agendar sessões.
+        </p>
+        <p *ngIf="clientes.length === 0 && tatuadores.length > 0">
+          É necessário cadastrar pelo menos um cliente antes de agendar sessões.
+        </p>
+        <p *ngIf="clientes.length > 0 && tatuadores.length === 0">
+          É necessário cadastrar pelo menos um tatuador antes de agendar sessões.
+        </p>
+        <div class="acoes-aviso">
+          <button mat-raised-button routerLink="/clientes" *ngIf="clientes.length === 0">
+            Cadastrar Cliente
+          </button>
+          <button mat-raised-button routerLink="/tatuadores" *ngIf="tatuadores.length === 0">
+            Cadastrar Tatuador
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Informações adicionais -->
+  <div *ngIf="!carregandoDados && clientes.length > 0 && tatuadores.length > 0" class="info-adicional">
+    <mat-icon>info</mat-icon>
+    <p>Certifique-se de que o horário escolhido está disponível para o tatuador selecionado. 
+       Os cuidados pós-tatuagem serão enviados por email para o cliente.</p>
+  </div>
+</div>
