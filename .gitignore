@@ -1,1 +1,99 @@
 node_modules
+# Compiled output
+/dist
+/tmp
+/out-tsc
+/build
+/.angular
+/.angular/cache
+
+# Node dependencies
+/node_modules
+
+# Environment files
+/src/environments/*.ts
+
+# System files
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.vscode
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Compiled JavaScript
+*.js
+*.js.map
+
+# Compiled CSS
+*.css
+*.css.map
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+testem.log
+typings
+
+# Compiled output of Angular universal
+/server
+
+# Angular specific files
+.angular/cache
+
+# NPM package lock
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# Optional: exclude the e2e output
+/e2e/*.js
+/e2e/*.js.map
+
+# Karma and Protractor logs
+/karma.conf.js
+/protractor.conf.js
+
+# Browserlist cache
+.browserslistrc
+.browserlistrc
+
+# Local env files
+.env
+.env.*.local
+
+# Schematic templates
+/schematics
+
+# Coverage reports
+/coverage/
+
+# Cypress files
+/cypress/screenshots/
+/cypress/videos/
+
+# ESLint cache
+.eslintcache
+
+# Prettier files
+.prettierignore
+.prettierrc
+
+# NX workspace files (if using Nx)
+/dist
+/tmp
+/project-graph.json
+/nx.json
+/decorators.json

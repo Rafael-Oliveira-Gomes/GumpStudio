@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Cliente, SexoEnum, ClienteFormData } from '../../models/cliente.model';
+import { Cliente, SexoEnum, ClienteFormData, ClienteResponse } from '../../models/cliente.model';
 import { ClienteService } from '../../services/cliente.service';
 
 @Component({
@@ -12,6 +12,7 @@ import { ClienteService } from '../../services/cliente.service';
 export class ClienteComponent implements OnInit {
   formularioCliente!: FormGroup;
   carregando = false;
+  clientes: ClienteResponse[] = [];  // ✅ Adicionado
   opcoesSexo = [
     { valor: SexoEnum.MASCULINO, descricao: 'Masculino' },
     { valor: SexoEnum.FEMININO, descricao: 'Feminino' },
@@ -26,6 +27,7 @@ export class ClienteComponent implements OnInit {
 
   ngOnInit(): void {
     this.criarFormulario();
+    this.carregarClientes();  // ✅ Adicionado
   }
 
   /**
@@ -40,9 +42,26 @@ export class ClienteComponent implements OnInit {
       dataNascimento: ['', [Validators.required]],
       alergia: [false],
       observacao: ['', [Validators.maxLength(500)]],
-      sexo: ['', [Validators.required]]
+      sexo: ['', [Validators.required]],
+      clienteId: ['', [Validators.required]]  // ✅ Garanta que o campo do select esteja aqui
     });
   }
+
+  /**
+   * Carrega a lista de clientes da API
+   */
+private carregarClientes(): void {
+this.clienteService.buscarClientes().subscribe({
+  next: (resposta) => {
+    console.log('Resposta bruta:', resposta);
+    this.clientes = resposta.map((item: any) => item.cliente);
+  },
+  error: (erro) => {
+    this.exibirMensagem(`Erro ao carregar clientes: ${erro.message}`, 'erro');
+  }
+});
+
+}
 
   /**
    * Submete o formulário e cadastra o cliente
@@ -50,7 +69,7 @@ export class ClienteComponent implements OnInit {
   onSubmit(): void {
     if (this.formularioCliente.valid) {
       this.carregando = true;
-      
+
       const dadosFormulario: ClienteFormData = this.formularioCliente.value;
       const cliente: Cliente = this.converterParaCliente(dadosFormulario);
 
@@ -73,8 +92,6 @@ export class ClienteComponent implements OnInit {
 
   /**
    * Converte os dados do formulário para o modelo Cliente
-   * @param dadosFormulario - Dados do formulário
-   * @returns Objeto Cliente formatado
    */
   private converterParaCliente(dadosFormulario: ClienteFormData): Cliente {
     return {
@@ -91,8 +108,6 @@ export class ClienteComponent implements OnInit {
 
   /**
    * Formata a data para o formato ISO (YYYY-MM-DD)
-   * @param data - Data do formulário
-   * @returns String no formato ISO
    */
   private formatarDataParaISO(data: Date): string {
     return data.toISOString().split('T')[0];
@@ -101,7 +116,7 @@ export class ClienteComponent implements OnInit {
   /**
    * Reseta o formulário para o estado inicial
    */
-   resetarFormulario(): void {
+  resetarFormulario(): void {
     this.formularioCliente.reset();
     Object.keys(this.formularioCliente.controls).forEach(key => {
       this.formularioCliente.get(key)?.setErrors(null);
@@ -119,26 +134,22 @@ export class ClienteComponent implements OnInit {
 
   /**
    * Exibe mensagem para o usuário
-   * @param mensagem - Texto da mensagem
-   * @param tipo - Tipo da mensagem (sucesso, erro, aviso)
    */
   private exibirMensagem(mensagem: string, tipo: 'sucesso' | 'erro' | 'aviso'): void {
     const config = {
       duration: 4000,
       panelClass: [`snackbar-${tipo}`]
     };
-    
+
     this.snackBar.open(mensagem, 'Fechar', config);
   }
 
   /**
    * Obtém mensagem de erro para um campo específico
-   * @param nomeCampo - Nome do campo do formulário
-   * @returns Mensagem de erro ou string vazia
    */
   obterMensagemErro(nomeCampo: string): string {
     const campo = this.formularioCliente.get(nomeCampo);
-    
+
     if (campo?.hasError('required')) {
       return 'Este campo é obrigatório';
     }
@@ -156,14 +167,12 @@ export class ClienteComponent implements OnInit {
     if (campo?.hasError('pattern') && nomeCampo === 'telefone') {
       return 'Formato: (11) 99999-9999';
     }
-    
+
     return '';
   }
 
   /**
    * Verifica se um campo possui erro e foi tocado
-   * @param nomeCampo - Nome do campo
-   * @returns True se campo tem erro e foi tocado
    */
   temErro(nomeCampo: string): boolean {
     const campo = this.formularioCliente.get(nomeCampo);

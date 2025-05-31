@@ -17,9 +17,11 @@ export interface ClienteRequest {
 
 // Interface para resposta do servidor (incluindo ID após criação)
 export interface ClienteResponse extends Cliente {
-  id?: number | undefined;
+  id: number | undefined;
   dataCriacao?: string | undefined;
   dataAtualizacao?: string | undefined;
+  nome: string;
+  nomeSocial?: string | undefined;
 }
 
 // Enum para as opções de sexo
