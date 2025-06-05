@@ -145,9 +145,16 @@ export class SessaoComponent implements OnInit {
    * @param dataHora - Data e hora do formulário
    * @returns String no formato ISO
    */
-  private formatarDataHoraParaISO(dataHora: Date): string {
-    return dataHora.toISOString();
+private formatarDataHoraParaISO(dataHora: any): string {
+  const data = dataHora instanceof Date ? dataHora : new Date(dataHora);
+  
+  if (isNaN(data.getTime())) {
+    console.error("Data inválida:", dataHora);
+    return "";
   }
+
+  return data.toISOString();
+}
 
   /**
    * Reseta o formulário para o estado inicial

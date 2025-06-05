@@ -12,7 +12,6 @@ import { ClienteService } from '../../services/cliente.service';
 export class ClienteComponent implements OnInit {
   formularioCliente!: FormGroup;
   carregando = false;
-  clientes: ClienteResponse[] = [];  // ✅ Adicionado
   opcoesSexo = [
     { valor: SexoEnum.MASCULINO, descricao: 'Masculino' },
     { valor: SexoEnum.FEMININO, descricao: 'Feminino' },
@@ -27,7 +26,6 @@ export class ClienteComponent implements OnInit {
 
   ngOnInit(): void {
     this.criarFormulario();
-    this.carregarClientes();  // ✅ Adicionado
   }
 
   /**
@@ -42,26 +40,9 @@ export class ClienteComponent implements OnInit {
       dataNascimento: ['', [Validators.required]],
       alergia: [false],
       observacao: ['', [Validators.maxLength(500)]],
-      sexo: ['', [Validators.required]],
-      clienteId: ['', [Validators.required]]  // ✅ Garanta que o campo do select esteja aqui
+      sexo: ['', [Validators.required]]
     });
   }
-
-  /**
-   * Carrega a lista de clientes da API
-   */
-private carregarClientes(): void {
-this.clienteService.buscarClientes().subscribe({
-  next: (resposta) => {
-    console.log('Resposta bruta:', resposta);
-    this.clientes = resposta.map((item: any) => item.cliente);
-  },
-  error: (erro) => {
-    this.exibirMensagem(`Erro ao carregar clientes: ${erro.message}`, 'erro');
-  }
-});
-
-}
 
   /**
    * Submete o formulário e cadastra o cliente
@@ -110,7 +91,9 @@ this.clienteService.buscarClientes().subscribe({
    * Formata a data para o formato ISO (YYYY-MM-DD)
    */
   private formatarDataParaISO(data: Date): string {
-    return data.toISOString().split('T')[0];
+    return data instanceof Date
+      ? data.toISOString().split('T')[0]
+      : data;
   }
 
   /**
